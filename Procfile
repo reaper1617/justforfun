@@ -1,1 +1,1 @@
-web: java -jar target/demo-0.0.1-SNAPSHOT.jar
+web: java -Dspring.datasource.url=jdbc:mysql://localhost:3306/kickassusers?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC -jar target/demo-0.0.1-SNAPSHOT.jar
