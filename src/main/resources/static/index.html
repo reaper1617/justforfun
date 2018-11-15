@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<style>
+    h1{
+        font-family: "Blackadder ITC",cursive;
+        color: darkblue;
+    }
+
+    h2{
+        font-family: BrowalliaUPC,sans-serif;
+        color: indigo;
+    }
+
+    .body-pic{
+        background: url("van_17.jpg");
+    }
+
+</style>
+
+<body class="body-pic">
+
+<div class="container-fluid">
+
+    <div class = "container-fluid">
+        <h2>Fixed-top container</h2>
+        <nav class="nav nav-tabs bg-dark navbar-dark fixed-top">
+            <a class="navbar-brand" href="#">Punch'EmAll!</a>
+        </nav>
+    </div>
+
+
+    <div ng-app="myApp" ng-controller="baseCtrl" align="center">
+        <h1>Welcome to дать п#зды !</h1>
+        <br>
+        <br>
+        <h2>Кому ввалим люлей?</h2>
+        <br>
+        <input type="text" ng-model="toWhom" class="form-control" style="width: 350px" placeholder="никому пока" />
+        <br>
+        <!--<h2>Дать п#зды {{toWhom}}</h2>-->
+        <input type="button" class="btn btn-dark" value="Ввалить козлу!" ng-click="pushToArr(toWhom)">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <h2>Проверь себя! Вдруг ты уже в списке:</h2>
+        <!--<h2>Введите своё имя:</h2>-->
+        <br>
+        <div><input type="text" class="form-control" style="width: 350px" ng-model="checkIfGotCunt" placeholder="введи имя" /> </div>
+        <br>
+        <input type="button" class="btn btn-dark" value="Проверить" ng-click="checkIfGot(checkIfGotCunt)">
+        <br>
+        <br>
+        <br>
+        <br>
+        <!--<h2>Вам хотят надавать в дышло <span id="numOfPunchers" ng-bind="numOfPunchers"></span> человек</h2>-->
+        <h2>Топ:</h2>
+        <!--<h2>{{fuckedArr[0]}}</h2>-->
+        <table class="table table-bordered table-active table-hover" style="width: 800px;color: indigo">
+            <thead align="center">
+                <th>Id</th>
+                <th>Имя</th>
+                <th>Сколько навешают в граммах</th>
+            </thead>
+            <tbody align="center" style="font-family: Consolas; font-size: 18px; font-weight: bold;">
+            <tr ng-repeat="x in users">
+                <td>{{ x.id }}</td>
+                <td>{{ x.name }}</td>
+                <td>{{ x.numOfKicks }}</td>
+            </tr>
+            </tbody>
+        </table>
+        <br>
+        <br>
+    </div>
+
+    <div class = "container-fluid ">
+        <nav class="nav nav-tabs bg-dark navbar-dark fixed-bottom">
+            <a class="navbar-brand" href="#">Punch'EmAll!</a>
+        </nav>
+    </div>
+
+</div>
+<script>
+    var app = angular.module('myApp', []);
+    var fuckedArr = [];
+    app.controller('baseCtrl', function($scope, $http){
+        // $scope.toWhom = "никому пока";
+        // $scope.checkIfGotCunt = "никому пока";
+        $scope.numOfPunchers = "0";
+        $http.get("http://localhost:8080/getusers").then(function (resp) {
+            $scope.users = resp.data.kickassusers;
+        });
+
+        $scope.pushToArr = function(name){
+            // alert("In pushToArr func!");
+            $http.post("http://localhost:8080/putuser?username="+name)
+                .then(function (resp) {
+                    // alert("status: " + resp.data.status);
+                    alert(name + " огребёт за все!");
+                    $http.get("http://localhost:8080/getusers").then(function (resp) {
+                        $scope.users = resp.data.kickassusers;
+                    });
+                });
+        };
+        $scope.checkIfGot = function (name) {
+            // alert("In chech if got func!");
+            $http.get("http://localhost:8080/getnumofpunchers?username="+name)
+                .then(function (resp) {
+                    // alert("status: " + resp.data.status);
+                    if (resp.data.status === "FAILED"){
+                        alert("Тебя не хотят отмудохать! Живи пока.");
+                        $scope.numOfPunchers = resp.data.numOfKicks;
+                    }
+                    else {
+                        alert("Вам хотят насувать подач " + resp.data.numOfKicks + " человек!");
+                        $scope.numOfPunchers = resp.data.numOfKicks;
+                    }
+                })
+        }
+    });
+</script>
+</body>
+</html>
