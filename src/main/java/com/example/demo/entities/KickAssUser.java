@@ -4,7 +4,7 @@ package com.example.demo.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "users",schema = "kickassusers",catalog = "")
+@Table
 public class KickAssUser {
 
     public KickAssUser() {
@@ -17,7 +17,7 @@ public class KickAssUser {
 
     @Column(name = "id",nullable = false,unique = true)
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
 
